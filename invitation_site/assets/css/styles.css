@@ -334,7 +334,7 @@ a:hover { color: var(--accent); }
 .nav-drawer.open { display: block; }
 
 /* Compact topnav when burger is closed (mobile) */
-@media (max-width: 700px) {
+@media (max-width: 1024px), (max-height: 500px) and (orientation: landscape) {
   body.nav-open .topnav {
     padding: 6px 8px;
   }
@@ -345,7 +345,7 @@ a:hover { color: var(--accent); }
 
   body:not(.nav-open) .topnav-inner {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
@@ -381,6 +381,16 @@ a:hover { color: var(--accent); }
   body:not(.nav-open) .topnav-mini {
     padding: 4px 7px;
     font-size: 0.76rem;
+  }
+
+  body:not(.nav-open) .navlinks {
+    display: none;
+  }
+
+  body:not(.nav-open) .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   body:not(.nav-open) .nav-toggle {
@@ -453,7 +463,7 @@ a:hover { color: var(--accent); }
   line-height: 1.2;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px), (max-height: 500px) and (orientation: landscape) {
   .nav-drawer__header {
     padding: 10px 12px;
   }
@@ -894,6 +904,19 @@ a:hover { color: var(--accent); }
   border: 1px solid var(--line-brass);
 }
 
+@media (min-width: 900px) {
+  .poi-modal__dialog {
+    max-height: min(84vh, 860px);
+  }
+
+  .poi-modal__images img {
+    max-height: 52vh;
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
 .navlinks {
   display: flex;
   flex-wrap: wrap;
@@ -940,17 +963,16 @@ h1, h2, h3,
   max-width: 100%;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px), (max-height: 500px) and (orientation: landscape) {
   .navlinks {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
-    max-width: 100%;
+    display: none;
   }
 
-  .navlinks::-webkit-scrollbar { height: 6px; }
-  .navlinks::-webkit-scrollbar-thumb { background: rgba(154, 106, 58, 0.18); border-radius: 999px; }
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .ornament {
@@ -970,7 +992,7 @@ h1, h2, h3,
   background:
     linear-gradient(180deg, rgba(245, 236, 220, 0.18) 0%, rgba(245, 236, 220, 0.05) 35%, rgba(244, 234, 219, 0.22) 100%),
     linear-gradient(90deg, rgba(116, 82, 44, 0.22), rgba(116, 82, 44, 0.02) 24%, rgba(116, 82, 44, 0.00) 78%),
-    url("../../newlyweds_photo/main_art.jpg") center/cover no-repeat;
+    url("../back.jpg") top/cover repeat;
   filter: saturate(0.98) contrast(1.02);
   transform: scale(1.01);
   pointer-events: none;
@@ -1114,7 +1136,7 @@ h1, h2, h3,
 }
 
 .dresscode-carousel .carousel-slide img {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 5;
 }
 
 .dresscode-carousel .carousel-slide figcaption {
@@ -1881,7 +1903,7 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
   inset: 0;
   z-index: 200;
   display: none;
-  padding: 24px;
+  padding: 12px;
   background: rgba(10, 10, 12, 0.72);
   overflow: hidden;
   isolation: isolate;
@@ -1899,7 +1921,7 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
 
 .lightbox-content {
   max-width: min(1100px, 94vw);
-  max-height: 88vh;
+  max-height: 98vh;
   width: 100%;
   border-radius: 18px;
   overflow: hidden;
@@ -2040,14 +2062,14 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
   }
 
   .hero-stage {
-    min-height: auto;
+    min-height: 620px;
   }
 
   .hero-content {
     grid-template-columns: 1fr;
     align-items: center;
     justify-items: center;
-    padding: 24px 20px 124px;
+    padding: 24px 20px 112px;
   }
 
   .hero-text-wrapper {
@@ -2071,12 +2093,17 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
     max-height: 48vh;
   }
 
-  .hero-stage-timer {
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
-    left: 22px;
-    right: 22px;
-    bottom: 22px;
-  }
+    .hero-stage-timer {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        max-width: 100%;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        transform: none;
+        padding-bottom: 24px;
+    }
 
   .side-trail,
   .bird,
@@ -2190,7 +2217,7 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
   }
 
   .title {
-    padding-top: 20px;
+    padding-top: 24px;
     gap: 20px;
   }
 
@@ -2287,15 +2314,31 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
 
   .hero-stage-timer {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
     position: static;
     width: 100%;
-    margin-top: 4px;
+    max-width: 100%;
+    margin-top: -8px;
   }
 
   .timer .time-box {
     display: block;
+    min-width: 0;
+    padding: 8px 4px 7px;
+    border-radius: 12px;
+  }
+
+  .hero-stage-timer .num {
+    font-size: clamp(1.15rem, 5.8vw, 1.7rem);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .hero-stage-timer .label {
+    font-size: 0.72rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
   }
 
   .timer::before {
@@ -2366,7 +2409,7 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
   }
 
   .dresscode-carousel .carousel-viewport {
-    min-height: 630px;
+    min-height: 830px;
   }
 
   #about .gallery figure {
@@ -2473,11 +2516,32 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
 
 @media (max-width: 420px) {
   .hero-inner, section {
-    padding: 18px 14px;
+    padding: 8px 14px;
   }
 
-  .timer {
-    grid-template-columns: 1fr;
+  .hero-content {
+    padding: 8px 10px 8px;
+  }
+
+  .hero-stage-timer {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: -18px;
+  }
+
+  .hero-stage-timer .time-box {
+    padding: 6px 2px 5px;
+    border-radius: 10px;
+  }
+
+  .hero-stage-timer .num {
+    font-size: clamp(1rem, 5vw, 1.35rem);
+    margin-bottom: 1px;
+  }
+
+  .hero-stage-timer .label {
+    font-size: 0.62rem;
+    line-height: 1.05;
   }
 
   .topnav-mini,

@@ -49,6 +49,7 @@ setInterval(updateTimer, 1000);
 
 const rsvpForm = document.getElementById('rsvpForm');
 const rsvpToast = document.getElementById('rsvpToast');
+const rsvpCodeWord = document.getElementById('rsvpCodeWord');
 
 function showToast(message, isError = false) {
   if (!rsvpToast) return;
@@ -110,6 +111,7 @@ rsvpForm?.addEventListener('submit', (e) => {
   localStorage.setItem('rsvpResponses', JSON.stringify(list));
   rsvpForm.reset();
 	companionsList && (companionsList.innerHTML = '');
+	if (rsvpCodeWord) rsvpCodeWord.style.display = 'block';
   showToast('Спасибо! Ответ сохранён. До встречи на свадьбе.');
 });
 
@@ -323,6 +325,12 @@ function initCarousel(rootId) {
 initCarousel('whereCarousel');
 initCarousel('dresscodeMenCarousel');
 initCarousel('dresscodeLadyCarousel');
+
+const lightboxElements = {
+  lb: document.getElementById('lightbox'),
+  lbImg: document.getElementById('lightboxImg'),
+  lbClose: document.getElementById('lightboxClose'),
+};
 
 function initLightbox(root) {
 	const lb = lightboxElements.lb;

@@ -24,6 +24,7 @@
   <ItemGroup>
     <Content Include="assets\audio\goida.mp3" />
     <Content Include="assets\audio\zvuk-poceluya.mp3" />
+    <Content Include="assets\back.jpg" />
     <Content Include="assets\css\styles.css" />
     <Content Include="assets\data\mapContent.json" />
     <Content Include="assets\dresscod\combined dark blue.jpg" />
@@ -42,6 +43,12 @@
     <Content Include="assets\js\map.js" />
     <Content Include="assets\Logo.png" />
     <Content Include="assets\logo_empty.png" />
+    <Content Include="assets\places\alchemist.jpg" />
+    <Content Include="assets\places\ceremony.jpg" />
+    <Content Include="assets\places\frog.jpg" />
+    <Content Include="assets\places\hall.jpg" />
+    <Content Include="assets\places\levsha.jpg" />
+    <Content Include="assets\places\tesla.jpg" />
     <Content Include="index.html" />
     <Content Include="Map\day.jpg" />
     <Content Include="Map\evening.jpg" />
@@ -70,6 +77,7 @@
     <Folder Include="assets\dresscod\man\" />
     <Folder Include="assets\js\" />
     <Folder Include="assets\audio\" />
+    <Folder Include="assets\places\" />
     <Folder Include="Map\" />
     <Folder Include="SkyRiver_photo\" />
     <Folder Include="newlyweds_photo\" />
