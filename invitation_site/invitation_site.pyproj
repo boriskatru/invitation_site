@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>46092f23-7f66-4712-8bf5-8d628b07da9f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>invitation_site.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,15 +22,26 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="invitation_site.py" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="assets\audio\goida.mp3" />
     <Content Include="assets\audio\zvuk-poceluya.mp3" />
     <Content Include="assets\css\styles.css" />
     <Content Include="assets\data\mapContent.json" />
+    <Content Include="assets\dresscod\combined dark blue.jpg" />
+    <Content Include="assets\dresscod\combined.jpg" />
+    <Content Include="assets\dresscod\lady\787778159863463110.jpg" />
+    <Content Include="assets\dresscod\lady\Paleta de colores.jpg" />
+    <Content Include="assets\dresscod\lady\Без названия.jpg" />
+    <Content Include="assets\dresscod\lady\Кокошник современный _ лён_1200.jpg" />
+    <Content Include="assets\dresscod\lady\Кокошь.jpg" />
+    <Content Include="assets\dresscod\man\787778159863463049.jpg" />
+    <Content Include="assets\dresscod\man\787778159863463056.jpg" />
+    <Content Include="assets\dresscod\man\787778159863463065.jpg" />
+    <Content Include="assets\dresscod\man\Old Money Outfit for Men 🤎🔥 _ Classic Vintage Style.jpg" />
+    <Content Include="assets\dresscod\man\А ля рус дресс код.jpg" />
     <Content Include="assets\js\main.js" />
     <Content Include="assets\js\map.js" />
+    <Content Include="assets\Logo.png" />
+    <Content Include="assets\logo_empty.png" />
     <Content Include="index.html" />
     <Content Include="Map\day.jpg" />
     <Content Include="Map\evening.jpg" />
@@ -39,7 +51,8 @@
     <Content Include="Map\map_night.png" />
     <Content Include="Map\Night.jpg" />
     <Content Include="Map\sunrize.jpg" />
-    <Content Include="newlyweds_photo\main_art.png" />
+    <Content Include="newlyweds_photo\background.jpg" />
+    <Content Include="newlyweds_photo\main_art.jpg" />
     <Content Include="newlyweds_photo\photo_orig.jpg" />
     <Content Include="newlyweds_photo\photo_art.jpg" />
     <Content Include="SkyRiver_photo\skyriver-collage-17.jpg" />
@@ -52,6 +65,9 @@
     <Folder Include="assets\" />
     <Folder Include="assets\css\" />
     <Folder Include="assets\data\" />
+    <Folder Include="assets\dresscod\" />
+    <Folder Include="assets\dresscod\lady\" />
+    <Folder Include="assets\dresscod\man\" />
     <Folder Include="assets\js\" />
     <Folder Include="assets\audio\" />
     <Folder Include="Map\" />

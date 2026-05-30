@@ -87,45 +87,66 @@
   <nav class="topnav" aria-label="Навигация">
     <div class="topnav-inner">
       <div class="brand">
-        <b>Борис & Анна</b>
-        <span>23.07.2026 • SkyRiver</span>
+        <img class="brand-logo" src="assets/logo_empty.png" alt="Логотип" width="56" height="56" />
       </div>
       <div class="topnav-actions" aria-label="Быстрые эффекты">
         <button class="topnav-mini" type="button" id="btnGorko" aria-label="Горько!">Горько!</button>
         <button class="topnav-mini" type="button" id="btnGoyda" aria-label="Гойда!">Гойда!</button>
       </div>
+      <button class="nav-toggle" type="button" id="navToggle" aria-label="Открыть меню" aria-controls="navDrawer" aria-expanded="false">
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+      
       <div class="navlinks">
-        <a href="#invite">Приглашение</a>
-        <a href="#about">О нас</a>
+        <a href="#invite">Пролог</a>
+        <a href="#about">Герои</a>
         <a href="#where">Где и когда</a>
         <a href="#plan">План</a>
-        <a href="#dresscode">Дресс-код</a>
+        <a href="#dresscode">Наряды</a>
         <a href="#wishlist">Желания</a>
         <a href="#partners">Партнёры</a>
         <a href="#contacts">Контакты</a>
       </div>
     </div>
   </nav>
+
+  <div class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="nav-drawer__backdrop" data-close="true"></div>
+    <div class="nav-drawer__panel" role="dialog" aria-modal="true" aria-label="Меню">
+      <div class="nav-drawer__header">
+        <div class="nav-drawer__title">Карта сайта</div>
+        <button class="nav-drawer__close" type="button" data-close="true" aria-label="Закрыть">✕</button>
+      </div>
+      <div class="nav-drawer__links" id="navDrawerLinks"></div>
+    </div>
+  </div>
   <main class="hero">
     <div class="ornament"></div>
-    <div class="card">
+    <div class="hero-backdrop" aria-hidden="true"></div>
+    <div class="card hero-card">
       <div class="card-frame" aria-hidden="true"></div>
       <section class="hero-inner title" id="invite">
-        <div class="eyebrow">Сказка о механике и царевне</div>
-        <h1>Борис & Анна</h1>
-        <p class="subtitle">Приглашаем вас 23 июля 2026 года в яхт-клуб SkyRiver на праздник, где русские сказки встречаются со стимпанком и русским модерном.</p>
-        <div class="hero-cta">
-          <a class="btn-primary" href="#rsvp">Подтвердить присутствие</a>
-          <a class="btn-secondary" href="#where">Как добраться</a>
-        </div>
-        <div class="hero-art" aria-label="Иллюстрация молодожёнов">
-          <img src="newlyweds_photo/main_art.png" alt="Борис и Анна — иллюстрация" loading="eager" decoding="async" width="1200" height="1200" />
-        </div>
-        <div class="timer" id="timer">
-          <div class="time-box"><span class="num" id="days">—</span><span class="label">дней</span></div>
-          <div class="time-box"><span class="num" id="hours">—</span><span class="label">часов</span></div>
-          <div class="time-box"><span class="num" id="minutes">—</span><span class="label">минут</span></div>
-          <div class="time-box"><span class="num" id="seconds">—</span><span class="label">секунд</span></div>
+        <div class="hero-stage">
+          <div class="hero-stage-frame" aria-hidden="true"></div>
+          <div class="hero-content">
+            <div class="hero-text-wrapper">
+            <div class="hero-text-box">
+              <div class="eyebrow">Сказка об Изобретателе и Царевне</div>
+              <h1>Борис & Анна</h1>
+              <p class="subtitle">Приглашаем вас 23 июля 2026 года в яхт-клуб SkyRiver на наш праздник, где русские сказки встречаются со стимпанком и русским модерном.</p>
+              <div class="hero-cta">
+                <a class="btn-primary" href="#rsvp">Подтвердить присутсвие</a>
+                <a class="btn-secondary" href="#where">Как добраться</a>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="timer hero-stage-timer" id="timer">
+            <div class="time-box"><span class="num" id="days">—</span><span class="label">дней</span></div>
+            <div class="time-box"><span class="num" id="hours">—</span><span class="label">часов</span></div>
+            <div class="time-box"><span class="num" id="minutes">—</span><span class="label">минут</span></div>
+            <div class="time-box"><span class="num" id="seconds">—</span><span class="label">секунд</span></div>
+          </div>
         </div>
       </section>
 
@@ -144,11 +165,11 @@
         </section>
 
       <section id="about">
-        <h2 class="section-title">О нас</h2>
+        <h2 class="section-title">Герои сказки</h2>
         <div class="grid-2">
           <div>
               <div class="panel panel--dense">
-                  <b>Борис-чудо-мастер</b> — смекалистый малый, всё в руках спорится. Любую душу из тела вынет, по шурупчикам пересоберёт и обратно сложит, вот он какой! Всё у него в инструментах да гаечках. Любое дело так замыслить может, что не каждый тульский мастер с ним потягается. Вот и полюбилась ему Анна Прекрасная, да где сражаться с колдовством Кощеевым ему одному? Тут дружина требуется. Снаряжайтесь, молодцы!
+                  <b>Борис-чудо-мастер</b> — всё у него в руках спорится. Умеет собирать механизмы, чинить невозможное и придумывать решения там, где другие видят только загадку! Любое дело так замыслить может, что не каждый тульский мастер с ним потягается. Вот и полюбилась ему Анна Прекрасная, да где сражаться с колдовством Кощеевым ему одному? Тут дружина требуется. Снаряжайтесь, молодцы!
                   <br><br>
                   <b>Царевна Анна Прекрасная </b> – девица видная, статная, всем сказочным персонажам люба на загляденье. И душа у ней широкая, и поступь благородная, и уста сахарные, и очи глубокие. И всюду она поспевает: и дом прибрать, и коня остановить, и огонь потушить, и потеху затеять. Никто мимо неё пройти не может – все шеи сворачивают. Даже Кощей. И заточил он её к себе в Терем заколдованный. Спасти её надобно!
                   <div class="divider"></div>
@@ -167,15 +188,14 @@
       </section>
 
       <section id="where">
-        <h2 class="section-title">Где и когда</h2>
+        <h2 class="section-title"> Место действа</h2>
         <div class="grid-2">
           <div>
             <div class="panel panel--dense">
               <div><b>23 июля 2026</b> • четверг</div>
               <div style="margin-top: 8px;"><b>Сбор гостей:</b> 15:00</div>
               <div><b>Место:</b> Яхт-клуб SkyRiver</div>
-              <div class="muted">ул. Земляничная, строение 5/3, Троицкое, Московская обл., 141044</div>
-              <div style="margin-top: 12px;" class="muted">Откройте маршрут в Яндекс Картах:</div>
+              <div class="muted">ул. Земляничная, строение 5/3, Троицкое, Московская обл., 141044</div>              
               <a class="btn-secondary" target="_blank" rel="noopener" href="https://yandex.com/maps/-/CPsyrY8w">Открыть Яндекс Карты</a>
               <div class="divider"></div>
               <div class="code-word" style="margin-top: 14px;">Кодовое слово на входе: <b>Жар‑птица</b>.</div>
@@ -203,12 +223,12 @@
           </div>
         </div>
         <div class="where-map" style="margin-top: 14px;">
-          <iframe class="map" title="Карта: Яхт-клуб SkyRiver" src="https://yandex.ru/map-widget/v1/?text=%D0%AF%D1%85%D1%82-%D0%BA%D0%BB%D1%83%D0%B1%20SkyRiver%2C%20%D1%83%D0%BB.%20%D0%97%D0%B5%D0%BC%D0%BB%D1%8F%D0%BD%D0%B8%D1%87%D0%BD%D0%B0%D1%8F%2C%20%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BD%D0%B8%D0%B5%205%2F3%2C%20%D0%A2%D1%80%D0%BE%D0%B8%D1%86%D0%BA%D0%BE%D0%B5%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB.%2C%20141044&z=14" loading="lazy"></iframe>
+          <iframe class="map" title="Карта: Яхт-клуб SkyRiver" src="https://yandex.ru/map-widget/v1/?text=%D0%AF%D1%85%D1%82-%D0%BA%D0%BB%D1%83%D0%B1%20SkyRiver%2C%20%D1%83%D0%BB.%20%D0%97%D0%B5%D0%BC%D0%BB%D1%8F%D0%BD%D0%B8%D1%87%D0%BD%D0%B0%D1%8F%2C%20%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BD%D0%B8%D0%B5%205%2F3%2C%20%D0%A2%D1%80%D0%BE%D0%B8%D1%86%D0%BA%D0%BE%D0%B5%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB.%2C%20141044&z=14" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </section>
 
       <section id="plan">
-        <h2 class="section-title">План мероприятия</h2>
+        <h2 class="section-title">Ход действа</h2>
         <div class="grid-2">
           <div>
             <div class="panel panel--dense">
@@ -230,7 +250,7 @@
       </section>
 
       <section id="dresscode">
-        <h2 class="section-title">Дресс-код</h2>
+        <h2 class="section-title">Наряды для бала</h2>
         <div class="panel panel--dense">
             <div class="muted">Одеяния - в цвете русских сказок Билибина с элементами русского модерна и стипанка. Поддержите настроение палитрой и деталями. Ниже — рекомендованные оттенки. Главное - не яркие и не слишком тёмные. По традиции, белый цвет оставим Царевне!</div>
         </div>
@@ -260,91 +280,139 @@
             <div class="tile-content"><div class="tile-title">Глубокий синий</div><div class="tile-hex">#2A3F5F</div></div>
           </div>
         </div>
-      </section>
-
-      <section id="rsvp">
-        <h2 class="section-title">Анкета гостя</h2>
-        <div class="grid-2">
-          <div>
-            <div class="panel panel--dense">
-              Нам важно заранее понять состав гостей и особенности питания.
-              <div class="divider"></div>
-              <div class="muted" style="margin-top: 14px;">Ответ сохранится на этом устройстве. Если нужно — мы добавим отправку в Telegram/почту или Google Form.</div>
+        <div class="dresscode-examples">
+          <div class="dresscode-group panel panel--dense">
+            <h3 class="dresscode-group-title">Мужские образы</h3>
+            <div class="carousel dresscode-carousel" id="dresscodeMenCarousel" aria-label="Примеры мужской одежды">
+              <button class="carousel-btn prev" type="button" aria-label="Предыдущий мужской образ">‹</button>
+              <div class="carousel-viewport dresscode-carousel-viewport">
+                <figure class="carousel-slide active">
+                  <img src="assets/dresscod/man/787778159863463049.jpg" alt="Пример мужского образа в стиле дресс-кода" loading="lazy" />
+                  <figcaption>Мужской образ</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/man/787778159863463056.jpg" alt="Пример мужского наряда в палитре дресс-кода" loading="lazy" />
+                  <figcaption>Палитра и фактуры</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/man/787778159863463065.jpg" alt="Пример мужского праздничного образа" loading="lazy" />
+                  <figcaption>Праздничный образ</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/man/Old Money Outfit for Men 🤎🔥 _ Classic Vintage Style.jpg" alt="Пример мужского образа в винтажном стиле" loading="lazy" />
+                  <figcaption>Винтажный акцент</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/man/А ля рус дресс код.jpg" alt="Пример мужского образа с русскими мотивами" loading="lazy" />
+                  <figcaption>Русские мотивы</figcaption>
+                </figure>
+              </div>
+              <button class="carousel-btn next" type="button" aria-label="Следующий мужской образ">›</button>
             </div>
           </div>
-          <div>
-            <div class="panel form-card">
-              <form class="guest-form" id="rsvpForm">
-                <div class="form-row">
-                  <div>
-                    <label for="guestName"><b>Имя и фамилия</b></label>
-                    <input id="guestName" name="name" autocomplete="name" required />
-                  </div>
-                  <div>
-                    <label for="guestContact"><b>Контакт (Telegram/телефон)</b></label>
-                    <input id="guestContact" name="contact" autocomplete="tel" placeholder="@username или +7..." />
-                  </div>
-                </div>
-
-                <fieldset class="fieldset">
-                  <div class="fieldset-title">
-                    <b>Присутствие</b>
-                    <span class="hint">Выберите вариант</span>
-                  </div>
-                  <select name="attendance" required>
-                    <option value="" selected disabled>—</option>
-                    <option value="yes">Да, приду(ём)</option>
-                    <option value="no">К сожалению, не смогу(ем)</option>
-                  </select>
-                </fieldset>
-
-                <div class="form-row">
-                  <div>
-                    <label for="plusOne"><b>Плюс один</b></label>
-                    <select id="plusOne" name="plusOne">
-                      <option value="unknown" selected>Пока не знаю</option>
-                      <option value="solo">Буду один/одна</option>
-                      <option value="withGuest">Буду с парой</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label for="guestCount"><b>Количество гостей</b></label>
-                    <select id="guestCount" name="guestCount">
-                      <option value="1" selected>1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label for="allergies"><b>Аллергии / ограничения по еде</b></label>
-                  <textarea id="allergies" name="allergies" rows="3" placeholder="Например: орехи, морепродукты, вегетарианство..."></textarea>
-                </div>
-
-                <div>
-                  <label for="comment"><b>Комментарий</b></label>
-                  <textarea id="comment" name="comment" rows="3" placeholder="Любые пожелания"></textarea>
-                </div>
-
-                <button type="submit">Сохранить ответ</button>
-                <button class="btn-secondary" type="button" id="rsvpExport">Скопировать ответы (JSON)</button>
-                <div class="toast" id="rsvpToast" role="status" aria-live="polite"></div>
-              </form>
+          <div class="dresscode-group panel panel--dense">
+            <h3 class="dresscode-group-title">Женские образы</h3>
+            <div class="carousel dresscode-carousel" id="dresscodeLadyCarousel" aria-label="Примеры женской одежды">
+              <button class="carousel-btn prev" type="button" aria-label="Предыдущий женский образ">‹</button>
+              <div class="carousel-viewport dresscode-carousel-viewport">
+                <figure class="carousel-slide active">
+                  <img src="assets/dresscod/lady/787778159863463110.jpg" alt="Пример женского образа в стиле дресс-кода" loading="lazy" />
+                  <figcaption>Женский образ</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/lady/Paleta de colores.jpg" alt="Пример женского образа в палитре дресс-кода" loading="lazy" />
+                  <figcaption>Палитра и оттенки</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/lady/Без названия.jpg" alt="Пример женского праздничного образа" loading="lazy" />
+                  <figcaption>Праздничный образ</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/lady/Кокошник современный _ лён_1200.jpg" alt="Пример женского образа с современным кокошником" loading="lazy" />
+                  <figcaption>Современный кокошник</figcaption>
+                </figure>
+                <figure class="carousel-slide">
+                  <img src="assets/dresscod/lady/Кокошь.jpg" alt="Пример женского образа с русскими мотивами" loading="lazy" />
+                  <figcaption>Русские мотивы</figcaption>
+                </figure>
+              </div>
+              <button class="carousel-btn next" type="button" aria-label="Следующий женский образ">›</button>
             </div>
           </div>
         </div>
       </section>
 
+      <section id="rsvp">
+        <h2 class="section-title">Свиток гостя</h2>
+        <div class="grid-2">
+            <div>
+                <div class="panel form-card">
+                    <form class="guest-form" id="rsvpForm">
+                        <div class="form-row">
+                            <div>
+                                <label for="guestName"><b>Имя героя</b></label>
+                                <input id="guestName" name="name" autocomplete="name" required />
+                            </div>
+                            <div>
+                                <label for="guestContact"><b>Контакт (TG/телефон)</b></label>
+                                <input id="guestContact" name="contact" autocomplete="tel" placeholder="@username или +7..." />
+                            </div>
+                        </div>
+
+                        <fieldset class="fieldset">
+                            <div class="fieldset-title">
+                                <b>Присутствие</b>
+                                <span class="hint">Выберите вариант</span>
+                            </div>
+                            <select name="attendance" required>
+                                <option value="" selected disabled>—</option>
+                                <option value="yes">Да, приду(ём)</option>
+                                <option value="no">К сожалению, не смогу(ем)</option>
+                            </select>
+                        </fieldset>
+
+                        <div class="form-row">
+                            <div>
+                                <label><b>Спутники</b></label>
+                                <div class="guest-companions" id="guestCompanions">
+                                    <div class="guest-companions__list" id="guestCompanionsList"></div>
+                                    <button class="btn-secondary guest-companions__add" type="button" id="addCompanionBtn">Добавить человека</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="allergies"><b>Особенности трапезы (Аллергии)</b></label>
+                            <textarea id="allergies" name="allergies" rows="3" placeholder="Например: орехи, морепродукты, вегетарианство..."></textarea>
+                        </div>
+
+                        <div>
+                            <label for="comment"><b>Послание молодым</b></label>
+                            <textarea id="comment" name="comment" rows="3" placeholder="Любые пожелания"></textarea>
+                        </div>
+
+                        <button type="submit">Отправить свиток</button>
+                        <div class="toast" id="rsvpToast" role="status" aria-live="polite"></div>
+                    </form>
+                </div>
+            </div>
+            <div>
+                <div class="panel panel--dense">
+                    Нам важно заранее понять состав гостей и особенности питания.
+                    <div class="divider"></div>
+                    <div class="muted" style="margin-top: 14px;">Ответ отправится нам в Telegram и в Google Form.</div>
+                </div>
+            </div>
+        </div>
+      </section>
+
       <section id="wishlist">
-        <h2 class="section-title">Список желаний молодожёнов</h2>
+        <h2 class="section-title">Дары молодым</h2>
         <div class="panel panel--dense">
-          <div class="muted">Главный Ваш подарок -- это Ваше присутсвие. Но если Вы хотите что-то подарить, то мы собрали идеи в отдельном документе — так будет удобнее. Нам очень нравятся цветы, но мы хотим насладиться каждым букетом индивидуально. Поэтому, если хотите подарить нам букет, то оформите его через цветочную подписку по ссылке ниже. Тогда мы сможем получить его в удобное и приятное время после свадьбы.</div>
+          <div class="muted">Главный Ваш подарок -- это Ваше присутствие. Но если Вы хотите что-то подарить, то мы собрали идеи в отдельном документе — так будет удобнее. Нам очень нравятся цветы, но мы хотим насладиться каждым букетом индивидуально. Поэтому, если хотите подарить нам букет, то оформите его через цветочную подписку по ссылке ниже. Тогда мы сможем получить его в удобное и приятное время после свадьбы.</div>
           <div style="margin-top: 12px;">
             <a class="btn-secondary" href="#" target="_blank" rel="noopener">Открыть список желаний</a>
           </div>
-          <div class="muted" style="margin-top: 12px; font-size: 0.95rem;">Замените ссылку на вашу (Google Docs/Notion/документ).</div>
         </div>
       </section>
 
@@ -361,14 +429,13 @@
             <div class="contact"><b>МГУ</b><div class="muted">Сказочная мудрость</div></div>
             <div class="contact"><b>Бойцовский клуб</b><div class="muted">Удаль богатырская</div></div>
           </div>
-          <div class="muted" style="margin-top: 12px; font-size: 0.95rem;">Логотипы добавлю, как только вы положите файлы в папку проекта (и скажете пути/названия).</div>
-        </div>
+         </div>
       </section>
 
 
 
       <section id="contacts">
-        <h2 class="section-title">Контакты</h2>
+        <h2 class="section-title">Голубиная почта</h2>
         <div class="panel">
           <div class="muted">Если потеряетесь по дороге или появятся вопросы — пишите/звоните.</div>
           <div class="contacts">

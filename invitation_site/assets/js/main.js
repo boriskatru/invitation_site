@@ -1,20 +1,47 @@
 const weddingDate = new Date('2026-07-23T15:00:00');
 const ids = ['days', 'hours', 'minutes', 'seconds'];
+const timerRoot = document.getElementById('timer');
+const timerNodes = ids.reduce((acc, id) => {
+  const node = document.getElementById(id);
+  if (node) acc[id] = node;
+  return acc;
+}, {});
+const companionsList = document.getElementById('guestCompanionsList');
+const addCompanionBtn = document.getElementById('addCompanionBtn');
+
+function pad2(n) {
+  const x = Number(n) || 0;
+  return x < 10 ? `0${x}` : `${x}`;
+}
 
 function updateTimer() {
   const diff = weddingDate - new Date();
   if (diff <= 0) {
-	ids.forEach((id) => (document.getElementById(id).textContent = '0'));
+	ids.forEach((id) => {
+	  if (timerNodes[id]) timerNodes[id].textContent = '0';
+	});
+	timerRoot?.setAttribute?.('data-label', 'До свадьбы');
+	timerRoot?.setAttribute?.('data-compact', '00:00:00:00');
 	return;
   }
   const seconds = Math.floor(diff / 1000) % 60;
   const minutes = Math.floor(diff / (1000 * 60)) % 60;
   const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  document.getElementById('days').textContent = days;
-  document.getElementById('hours').textContent = hours;
-  document.getElementById('minutes').textContent = minutes;
-  document.getElementById('seconds').textContent = seconds;
+	if (timerNodes.days) timerNodes.days.textContent = days;
+  if (timerNodes.hours) timerNodes.hours.textContent = hours;
+  if (timerNodes.minutes) timerNodes.minutes.textContent = minutes;
+  if (timerNodes.seconds) timerNodes.seconds.textContent = seconds;
+
+  // compact view for mobile: DD:HH:MM:SS
+  if (timerRoot) {
+	const dd = pad2(days % 100);
+	const hh = pad2(hours);
+	const mm = pad2(minutes);
+	const ss = pad2(seconds);
+	timerRoot.setAttribute('data-label', 'До свадьбы');
+	timerRoot.setAttribute('data-compact', `${dd}:${hh}:${mm}:${ss}`);
+  }
 }
 
 updateTimer();
@@ -29,6 +56,30 @@ function showToast(message, isError = false) {
   rsvpToast.classList.toggle('error', isError);
   rsvpToast.style.display = 'block';
 }
+
+function createCompanionField(value = '') {
+  if (!companionsList) return;
+
+  const item = document.createElement('div');
+  item.className = 'guest-companions__item';
+
+  const input = document.createElement('input');
+  input.name = 'companions';
+  input.autocomplete = 'name';
+  input.placeholder = 'ФИО гостя';
+  input.value = value;
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'guest-companions__remove';
+  removeBtn.textContent = 'Удалить';
+  removeBtn.addEventListener('click', () => item.remove());
+
+  item.append(input, removeBtn);
+  companionsList.appendChild(item);
+}
+
+addCompanionBtn?.addEventListener('click', () => createCompanionField());
 
 rsvpForm?.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -48,11 +99,17 @@ rsvpForm?.addEventListener('submit', (e) => {
 
   const fd = new FormData(rsvpForm);
   const payload = Object.fromEntries(fd.entries());
+	payload.companions = fd
+	.getAll('companions')
+	.map((value) => value.trim())
+	.filter(Boolean);
+  payload.guestCount = payload.companions.length + 1;
   payload.submittedAt = new Date().toISOString();
   const list = JSON.parse(localStorage.getItem('rsvpResponses') || '[]');
   list.push(payload);
   localStorage.setItem('rsvpResponses', JSON.stringify(list));
   rsvpForm.reset();
+	companionsList && (companionsList.innerHTML = '');
   showToast('Спасибо! Ответ сохранён. До встречи на свадьбе.');
 });
 
@@ -73,10 +130,70 @@ const sideTrail = document.getElementById('sideTrail');
 const sideTrailPath = document.getElementById('sideTrailPath');
 
 const navLinks = Array.from(document.querySelectorAll('.navlinks a'));
+let navToggle = document.getElementById('navToggle');
+let navDrawer = document.getElementById('navDrawer');
+let navDrawerLinks = document.getElementById('navDrawerLinks');
+
+function setDrawerOpen(open) {
+  if (!navDrawer || !navToggle) return;
+	if (!open) {
+	// ensure focus is not trapped inside an element that becomes aria-hidden
+	const focused = document.activeElement;
+	if (focused && navDrawer.contains(focused) && typeof focused.blur === 'function') focused.blur();
+	navToggle.focus();
+  }
+  navDrawer.classList.toggle('open', open);
+  navDrawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+  navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  navToggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+  document.body.classList.toggle('nav-open', open);
+}
+
+function initBurgerMenu() {
+	if (initBurgerMenu._inited) return;
+
+  navToggle = document.getElementById('navToggle');
+  navDrawer = document.getElementById('navDrawer');
+  navDrawerLinks = document.getElementById('navDrawerLinks');
+
+  if (!navDrawer || !navToggle || !navDrawerLinks) return;
+  if (!navLinks.length) return;
+
+  navDrawerLinks.innerHTML = '';
+  for (const a of navLinks) {
+	const clone = a.cloneNode(true);
+	clone.addEventListener('click', () => setDrawerOpen(false));
+	navDrawerLinks.appendChild(clone);
+  }
+
+  navToggle.addEventListener('click', () => {
+	const isOpen = navDrawer.classList.contains('open');
+	setDrawerOpen(!isOpen);
+  });
+
+  navDrawer.addEventListener('click', (e) => {
+	const t = e.target;
+	if (t?.dataset?.close === 'true') setDrawerOpen(false);
+  });
+
+  window.addEventListener('keydown', (e) => {
+	if (e.key === 'Escape' && navDrawer.classList.contains('open')) setDrawerOpen(false);
+  });
+
+  initBurgerMenu._inited = true;
+}
 
 function setActiveNav(hash) {
   if (!navLinks.length) return;
   navLinks.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === hash));
+  const drawerAnchors = Array.from(document.querySelectorAll('#navDrawerLinks a'));
+  drawerAnchors.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === hash));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBurgerMenu);
+} else {
+  initBurgerMenu();
 }
 
 if (navLinks.length) {
@@ -99,6 +216,7 @@ if (navLinks.length) {
 
 let lastScrollY = window.scrollY;
 let scrollStopTimer;
+let birdFramePending = false;
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
@@ -156,7 +274,13 @@ if (!reduceMotion) {
 		scrollStopTimer = setTimeout(() => setBirdMoving(false), 120);
 	  }
 
-	  requestAnimationFrame(updateBird);
+	  if (!birdFramePending) {
+		birdFramePending = true;
+		requestAnimationFrame(() => {
+		  birdFramePending = false;
+		  updateBird();
+		});
+	  }
 	},
 	{ passive: true },
   );
@@ -197,11 +321,13 @@ function initCarousel(rootId) {
 }
 
 initCarousel('whereCarousel');
+initCarousel('dresscodeMenCarousel');
+initCarousel('dresscodeLadyCarousel');
 
 function initLightbox(root) {
-  const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lightboxImg');
-  const lbClose = document.getElementById('lightboxClose');
+	const lb = lightboxElements.lb;
+  const lbImg = lightboxElements.lbImg;
+  const lbClose = lightboxElements.lbClose;
 	if (!root || !lb || !lbImg || !lbClose) return;
 
   let isOpen = false;
@@ -279,28 +405,14 @@ function initLightbox(root) {
 	  // Это гарантирует, что откроется текущее фото, даже если событие пришло от общего контейнера.
 	  const activeImgEl = root.querySelector('.carousel-slide.active img');
 	  const chosenImgEl = activeImgEl || imgEl;
-	  // Надёжное извлечение пути: сначала атрибут, потом свойство.
-	  // Если src оказался абсолютным с "лишней" частью пути (например, /invitation_site/...),
-	  // пробуем автоматически переписать на относительный к текущему origin.
-	  let raw = chosenImgEl.getAttribute('src') || chosenImgEl.src || '';
+		const rawSrc = chosenImgEl.getAttribute('src');
+	  const fallbackSrc = chosenImgEl.src || '';
+	  const source = rawSrc || fallbackSrc;
 	  try {
-		const u = new URL(raw, document.baseURI);
-		if (u.origin === window.location.origin) {
-			const marker = '/invitation_site/';
-			const idx = u.pathname.indexOf(marker);
-			if (idx !== -1) {
-				raw = u.pathname.slice(idx + marker.length) + u.search + u.hash;
-			}
-		}
-	  } catch {
-		// ignore
-	  }
-	  try {
-		const resolved = new URL(raw, document.baseURI).href;
-		open(resolved, chosenImgEl.alt || '');
+		open(new URL(source, document.baseURI).href, chosenImgEl.alt || '');
 	  } catch (err) {
-		console.warn('lightbox: URL resolution failed for', raw, err);
-		open(raw, chosenImgEl.alt || '');
+		console.warn('lightbox: URL resolution failed for', source, err);
+		open(source, chosenImgEl.alt || '');
 	  }
 	});
 
@@ -318,11 +430,13 @@ function initFxButtons() {
   const stage = document.getElementById('fxStage');
   const title = document.getElementById('fxTitle');
   const text = document.getElementById('fxText');
+  const closeBtn = overlay?.querySelector?.('.fx-close');
 
   if (!btnGorko || !btnGoyda || !overlay || !stage || !title || !text) return;
 
-  let activeAudio = null;
+	let activeAudio = null;
   let autoCloseTimer;
+  let lastInvoker = null;
 
   function stopAudio() {
 	if (!activeAudio) return;
@@ -336,6 +450,10 @@ function initFxButtons() {
   }
 
   function close() {
+	// avoid aria-hidden on ancestors of focused elements
+	const focused = document.activeElement;
+	if (focused && overlay.contains(focused) && typeof focused.blur === 'function') focused.blur();
+
 	overlay.classList.remove('open');
 	overlay.setAttribute('aria-hidden', 'true');
 	stage.innerHTML = '';
@@ -343,9 +461,14 @@ function initFxButtons() {
 	text.textContent = '';
 	clearTimeout(autoCloseTimer);
 	stopAudio();
+
+	if (lastInvoker && typeof lastInvoker.focus === 'function') lastInvoker.focus();
+	lastInvoker = null;
   }
 
-  function open({ fxTitle, fxText, stageEl, soundSrc, autoCloseMs = 3500 }) {
+	function open({ fxTitle, fxText, stageEl, soundSrc, autoCloseMs = 3500, invoker = null }) {
+	lastInvoker = invoker || document.activeElement;
+
 	stage.innerHTML = '';
 	title.textContent = fxTitle || '';
 	text.textContent = fxText || '';
@@ -353,6 +476,7 @@ function initFxButtons() {
 
 	overlay.classList.add('open');
 	overlay.setAttribute('aria-hidden', 'false');
+	closeBtn?.focus?.();
 
 	clearTimeout(autoCloseTimer);
 	autoCloseTimer = setTimeout(close, autoCloseMs);
@@ -407,6 +531,7 @@ function initFxButtons() {
 	  fxTitle: 'Горько!',
 	  fxText: 'Пора целоваться — конфетти прилагается.',
 	  stageEl: root,
+	  invoker: btnGorko,
 		soundSrc: 'assets/audio/zvuk-poceluya.mp3',
 	  autoCloseMs: 3800,
 	});
@@ -429,6 +554,7 @@ function initFxButtons() {
 	  fxTitle: 'Гойда!',
 	  fxText: 'Легендарный боевой клич активирован.',
 	  stageEl: root,
+	  invoker: btnGoyda,
 		soundSrc: 'assets/audio/goida.mp3',
 	  autoCloseMs: 2800,
 	});

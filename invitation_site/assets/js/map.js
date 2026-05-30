@@ -330,6 +330,17 @@
 
 	const areasFog = Array.isArray(data?.areas) ? data.areas : [];
 	const pois = Array.isArray(data?.pois) ? data.pois : [];
+	const lightSources = Array.isArray(data?.lightSources) ? data.lightSources : [];
+	const bonfires = lightSources.filter((ls) => ls.type === 'bonfire');
+	const buildings = lightSources.filter((ls) => ls.type === 'building');
+	window.__mapDebug = {
+	  getState: () => ({
+		areas: areasFog.length,
+		fogImgLoaded: !!fogImg,
+		fogTextureUrl,
+		fogCfg,
+	  }),
+	};
 
 	function pointInPoly(nx, ny, points) {
 	  // ray casting algorithm; nx/ny and points are normalized (0..1)
@@ -411,7 +422,8 @@
 
 	function updateTimeBadge() {
 	  if (!badgeEl) return;
-	  const key = getTimeOfDayKey(getMskHour());
+	  const mskHour = getMskHour();
+	  const key = getTimeOfDayKey(mskHour);
 	  const jpg = `Map/${key}.jpg`;
 	  const png = `Map/${key}.png`;
 	  setImgWithFallback(badgeEl, jpg, png);
@@ -448,13 +460,9 @@
 	  }
 	}
 
-	function renderLightBonfires(nowMs, x0, y0, w, h) {
-	  const lightSources = Array.isArray(data?.lightSources) ? data.lightSources : [];
-	  const bonfires = lightSources.filter(ls => ls.type === 'bonfire');
-
+	function renderLightBonfires(nowMs, x0, y0, w, h, timeOfDay) {
 	  if (bonfires.length === 0) return;
 
-	  const timeOfDay = getTimeOfDayKey(getMskHour());
 	  if (timeOfDay !== 'evening' && timeOfDay !== 'night') return;
 
 	  // Ночной режим требует более яркого свечения, чтобы пробиться через фильтр
@@ -545,13 +553,9 @@
 	}
 
 
-	function renderLightBuildings(nowMs, x0, y0, w, h) {
-	  const lightSources = Array.isArray(data?.lightSources) ? data.lightSources : [];
-	  const buildings = lightSources.filter(ls => ls.type === 'building');
-
+	function renderLightBuildings(nowMs, x0, y0, w, h, timeOfDay) {
 	  if (buildings.length === 0) return;
 
-	  const timeOfDay = getTimeOfDayKey(getMskHour());
 	  if (timeOfDay !== 'evening' && timeOfDay !== 'night') return;
 
 	  for (const building of buildings) {
@@ -598,16 +602,6 @@
 	}
 
 	function renderFog(nowMs, x0, y0, w, h) {
-	  // Debug hook: позволяет проверить состояние в DevTools console через window.__mapDebug.getState()
-	  window.__mapDebug = {
-		getState: () => ({
-		  areas: areasFog.length,
-		  fogImgLoaded: !!fogImg,
-		  fogTextureUrl,
-		  fogCfg,
-		}),
-	  };
-
 	  const alpha = typeof fogCfg.alpha === 'number' ? clamp(fogCfg.alpha, 0, 1) : 0.6;
 	  const speed = typeof fogCfg.speed === 'number' ? fogCfg.speed : 6;
 	  const t = (nowMs / 1000) * speed;
@@ -734,7 +728,8 @@
 	  const innerH = Math.max(1, h - padY * 2);
 
 	  // 1. Базовая карта с фильтром времени суток 
-	  const key = getTimeOfDayKey(getMskHour());
+	  const mskHour = getMskHour();
+	  const key = getTimeOfDayKey(mskHour);
 	  const lighting = getLightingForTimeOfDay(key);
 	  ctx.save();
 	  ctx.filter = lighting?.filter || 'none';
@@ -755,6 +750,8 @@
 	  }
 	  // 3. Маркеры POI (сверху)
 	  renderPois(nowMs, padX, padY, innerW, innerH);
+	  renderLightBuildings(nowMs, padX, padY, innerW, innerH, key);
+	  renderLightBonfires(nowMs, padX, padY, innerW, innerH, key);
 
 	  // 4. Туман (скрытие локаций)
 	  renderFog(nowMs, padX, padY, innerW, innerH);
@@ -804,7 +801,10 @@
 	  if (hit) modal.open(hit);
 	});
 
-	canvas.addEventListener('mousemove', (e) => {
+	let hoverFramePending = false;
+	let lastHoverEvent = null;
+
+	function handleCanvasHover(e) {
 	  const nowMs = Date.now();
 	  const { width: w, height: h } = setCanvasSize(canvas, viewport);
 	  const padX = Math.floor(w * clamp(padXRatio, 0, 0.2));
@@ -821,6 +821,16 @@
 
 	  canvas.style.cursor = 'pointer';
 	  showTooltip(hit.title || '', e.clientX, e.clientY);
+	}
+
+	canvas.addEventListener('mousemove', (e) => {
+	  lastHoverEvent = e;
+	  if (hoverFramePending) return;
+	  hoverFramePending = true;
+	  requestAnimationFrame(() => {
+		hoverFramePending = false;
+		if (lastHoverEvent) handleCanvasHover(lastHoverEvent);
+	  });
 	});
 
 	canvas.addEventListener('mouseleave', () => {
