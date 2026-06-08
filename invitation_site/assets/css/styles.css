@@ -696,6 +696,10 @@ a:hover { color: var(--accent); }
   box-shadow: var(--shadow-soft);
 }
 
+#whereCarousel {
+  overflow: hidden;
+}
+
 .poi-directory {
   margin-top: 22px;
 }
@@ -707,10 +711,10 @@ a:hover { color: var(--accent); }
 }
 
 .poi-directory__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.2vw, 1.55rem);
-  color: var(--text);
+    margin-left: 4px;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.2vw, 1.55rem);
+    color: var(--text);
 }
 
 .poi-directory__list {
@@ -1200,13 +1204,69 @@ h1, h2, h3,
 }
 
 .dresscode-carousel-viewport {
-  min-height: 900px;
+  min-height: 0;
   border-radius: 22px;
   overflow: hidden;
 }
 
 .dresscode-carousel .carousel-slide img {
-  aspect-ratio: 3 / 5;
+  aspect-ratio: auto;
+}
+
+@media (max-width: 768px) {
+  .dresscode-examples {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .dresscode-group,
+  .dresscode-group.panel,
+  .dresscode-group.panel--dense {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 16px;
+  }
+
+  .dresscode-carousel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .dresscode-carousel-viewport {
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+  }
+
+    .dresscode-carousel .carousel-slide {
+        inset: 0;
+        aspect-ratio: 3 / 4;
+    }
+
+  .dresscode-carousel .carousel-slide img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .dresscode-carousel .carousel-btn {
+    top: 50%;
+    width: 42px;
+    height: 42px;
+  }
+
+  .dresscode-carousel .carousel-btn.prev {
+    left: 8px;
+  }
+
+  .dresscode-carousel .carousel-btn.next {
+    right: 8px;
+  }
 }
 
 .dresscode-carousel .carousel-slide figcaption {
@@ -1471,7 +1531,199 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
   box-shadow: var(--shadow-soft);
 }
 
-.panel--dense { line-height: 1.85; }
+.panel--dense { line-height: 1.35; }
+
+.where-map {
+  position: relative;
+}
+
+.where-map:fullscreen {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  padding: 0;
+  margin: 0;
+  background: #000;
+}
+
+.where-map:fullscreen .map {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh !important;
+  border: 0;
+  border-radius: 0;
+}
+
+.where-map:fullscreen .map-fullscreen-toggle {
+  top: 12px;
+  left: 12px;
+}
+
+/* Стили для кнопки разворачивания iframe-карты в разделе "Место действа" */
+.map-fullscreen-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  appearance: none;
+  border: 1px solid rgba(200, 164, 93, 0.42);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(255, 248, 236, 0.92);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.map-fullscreen-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 248, 236, 1);
+  border-color: rgba(200, 164, 93, 0.62);
+}
+
+@media (max-width: 640px) {
+  .map-fullscreen-toggle {
+    top: 8px;
+    left: 8px;
+    padding: 6px 10px;
+    font-size: 0.86rem;
+  }
+  .map-fullscreen-toggle span { display: none; }
+}
+
+.where-map.where-map--fullscreen-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  width: 100vw;
+  height: 100dvh;
+  padding: 0;
+  margin: 0 !important;
+  background: #000;
+}
+
+.where-map.where-map--fullscreen-fallback .map {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh !important;
+  border: 0;
+  border-radius: 0;
+}
+
+.where-map.where-map--fullscreen-fallback .map-fullscreen-toggle {
+  top: 12px;
+  left: 12px;
+}
+
+.territory-map-fullscreen-toggle {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  appearance: none;
+  border: 1px solid rgba(200, 164, 93, 0.42);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(255, 248, 236, 0.92);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.territory-map-fullscreen-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 248, 236, 1);
+  border-color: rgba(200, 164, 93, 0.62);
+}
+
+.territory-map:fullscreen {
+  display: grid;
+  place-items: stretch;
+  background: rgba(20, 18, 16, 0.96);
+  padding: 16px;
+}
+
+.territory-map:fullscreen canvas,
+.territory-map:fullscreen #mapFrame {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  border-radius: 18px;
+}
+
+.territory-map:fullscreen #timeOfDayBadge,
+.territory-map:fullscreen #timeOfDayClock,
+.territory-map:fullscreen #mapFrame {
+  z-index: 3;
+}
+
+.territory-map:fullscreen .territory-map-fullscreen-toggle {
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+}
+
+body.map-fullscreen-fallback {
+  overflow: hidden;
+}
+
+.territory-map.territory-map--fullscreen-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  margin: 0 !important;
+  padding: 16px;
+  background: rgba(20, 18, 16, 0.96);
+}
+
+.territory-map.territory-map--fullscreen-fallback canvas,
+.territory-map.territory-map--fullscreen-fallback #mapFrame {
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 32px);
+  border-radius: 18px;
+}
+
+.territory-map.territory-map--fullscreen-fallback #timeOfDayBadge,
+.territory-map.territory-map--fullscreen-fallback #timeOfDayClock,
+.territory-map.territory-map--fullscreen-fallback #mapFrame {
+  z-index: 3;
+}
+
+.territory-map.territory-map--fullscreen-fallback .territory-map-fullscreen-toggle {
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+}
+
+@media (max-width: 640px) {
+  .territory-map-fullscreen-toggle {
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    font-size: 0.86rem;
+  }
+
+  .territory-map-fullscreen-toggle span {
+    display: none;
+  }
+}
 
 /* Territory map should span full panel width */
 #territory .panel {
@@ -1825,6 +2077,17 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
 
 .gallery--2col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
+.gallery--portrait-stack {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.gallery--about-couple {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
 .gallery figure {
   margin: 0;
   position: relative;
@@ -1855,8 +2118,24 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
   filter: saturate(1.06) contrast(1.06) sepia(0.05);
 }
 
+.gallery--portrait-stack img {
+  aspect-ratio: 3 / 4;
+}
+
+.gallery--about-couple img {
+  aspect-ratio: 3 / 4;
+}
+
 /* About section photo: reduce size by ~15% */
 #about .gallery figure { width: 88%; margin-left: auto; margin-right: auto; }
+
+#about .gallery--portrait-stack figure {
+  width: min(100%, 360px);
+}
+
+#about .gallery--about-couple figure {
+  width: 100%;
+}
 
 .gallery figcaption {
   position: absolute;
@@ -1928,7 +2207,7 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
 .carousel {
   position: relative;
   border-radius: 18px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--line-brass);
   background:
     radial-gradient(circle at 30% 15%, rgba(255,255,255,0.18), transparent 55%),
@@ -1953,6 +2232,10 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
 .carousel-slide.active {
   opacity: 1;
   transform: scale(1);
+}
+
+.carousel-btn {
+  z-index: 3;
 }
 
 .carousel-slide img {
@@ -2479,7 +2762,7 @@ h1 { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 0.95; letter-spacing: 0
   }
 
   .dresscode-carousel .carousel-viewport {
-    min-height: 830px;
+    min-height: 430px;
   }
 
   #about .gallery figure {

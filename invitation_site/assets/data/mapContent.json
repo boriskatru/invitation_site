@@ -75,12 +75,12 @@
     {
       "id": "welcome-feast",
       "title": "Приветственные яства",
-      "short": "Фуршет у костровой зоны",
+      "short": "Фуршет на веранде",
       "description": "Место, где можно на привале подготовиться к подвигам ратным",
       "x": 0.22,
-      "y": 0.37,
+      "y": 0.35,
       "revealAt": "2026-01-01T00:00:00Z",
-      "images": []
+      "images": [ "assets/places/welcome.jpg" ]
     },
     {
       "id": "ceremony-zone",
@@ -110,7 +110,7 @@
       "x": 0.30,
       "y": 0.31,
       "revealAt": "2026-01-01T00:00:00Z",
-      "images": []
+      "images": [ "assets/places/bride_ransom.jpg" ]
     },
     {
       "id": "main-hall",
@@ -130,7 +130,7 @@
       "x": 0.22,
       "y": 0.61,
       "revealAt": "2026-01-01T00:00:00Z",
-      "images": [ "assets/places/hall.jpg" ]
+      "images": [ "assets/places/toilet.jpg" ]
     },
     {
       "id": "smoking-room",
@@ -138,9 +138,9 @@
       "short": "Курилка в садовой беседке",
       "description": "Здесь путники выпускают пар, обсуждают чудеса вечера и дают механизму праздника минуту на передышку",
       "x": 0.52,
-      "y": 0.11,
+      "y": 0.09,
       "revealAt": "2026-01-01T00:00:00Z",
-      "images": [ "assets/places/hall.jpg" ]
+      "images": [ "assets/places/smoking.jpg" ]
     }
   ]
 }

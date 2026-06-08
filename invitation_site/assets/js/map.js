@@ -11,6 +11,71 @@
 	dataUrl: 'assets/data/mapContent.json',
   };
 
+  function initVenueMapFullscreen() {
+	const container = document.getElementById('venueMapContainer');
+	const toggle = document.getElementById('venueMapFullscreenToggle');
+	if (!container || !toggle) return;
+
+	function isActive() {
+	  return document.fullscreenElement === container || container.classList.contains('where-map--fullscreen-fallback');
+	}
+
+	function syncState() {
+	  const expanded = isActive();
+	  toggle.setAttribute('aria-pressed', expanded ? 'true' : 'false');
+	  toggle.setAttribute('aria-label', expanded ? 'Свернуть карту' : 'Развернуть карту на весь экран');
+	  toggle.innerHTML = expanded ? '⤡ <span>Свернуть</span>' : '⤢ <span>На весь экран</span>';
+	}
+
+	function enterFallback() {
+	  container.classList.add('where-map--fullscreen-fallback');
+	  document.body.classList.add('map-fullscreen-fallback');
+	  syncState();
+	}
+
+	function exitFallback() {
+	  container.classList.remove('where-map--fullscreen-fallback');
+	  document.body.classList.remove('map-fullscreen-fallback');
+	  syncState();
+	}
+
+	async function toggleFullscreen() {
+	  if (document.fullscreenEnabled && typeof container.requestFullscreen === 'function') {
+		if (document.fullscreenElement === container) {
+		  await document.exitFullscreen();
+		} else {
+		  await container.requestFullscreen();
+		}
+		return;
+	  }
+
+	  if (container.classList.contains('where-map--fullscreen-fallback')) {
+		exitFallback();
+	  } else {
+		enterFallback();
+	  }
+	}
+
+	toggle.addEventListener('click', () => {
+	  toggleFullscreen().catch(() => {
+		if (container.classList.contains('where-map--fullscreen-fallback')) {
+		  exitFallback();
+		} else {
+		  enterFallback();
+		}
+	  });
+	});
+
+	document.addEventListener('fullscreenchange', syncState);
+	window.addEventListener('keydown', (e) => {
+	  if (e.key === 'Escape' && container.classList.contains('where-map--fullscreen-fallback')) {
+		exitFallback();
+	  }
+	});
+
+	syncState();
+  }
+
   function clamp(n, min, max) {
 	return Math.max(min, Math.min(max, n));
   }
@@ -27,8 +92,8 @@
 		};
 	  case 'day':
 		return {
-		  filter: 'brightness(1.15) contrast(1.03) saturate(1.06)',
-		  overlay: 'rgba(255, 255, 255, 0.12)',
+		  filter: 'brightness(1.25) contrast(1.03) saturate(1.06)',
+		  overlay: 'rgba(255, 255, 255, 0.16)',
 		};
 	  case 'evening':
 		return {
@@ -903,6 +968,7 @@
   }
 
   window.initTerritoryMap = initTerritoryMap;
+  initVenueMapFullscreen();
 
   if (document.readyState === 'loading') {
 	document.addEventListener('DOMContentLoaded', () => initTerritoryMap());

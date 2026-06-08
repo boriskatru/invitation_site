@@ -45,11 +45,15 @@
     <Content Include="assets\Logo.png" />
     <Content Include="assets\logo_empty.png" />
     <Content Include="assets\places\alchemist.jpg" />
+    <Content Include="assets\places\bride_ransom.jpg" />
     <Content Include="assets\places\ceremony.jpg" />
     <Content Include="assets\places\frog.jpg" />
     <Content Include="assets\places\hall.jpg" />
     <Content Include="assets\places\levsha.jpg" />
+    <Content Include="assets\places\smoking.jpg" />
     <Content Include="assets\places\tesla.jpg" />
+    <Content Include="assets\places\toilet.jpg" />
+    <Content Include="assets\places\welcome.jpg" />
     <Content Include="index.html" />
     <Content Include="Map\day.jpg" />
     <Content Include="Map\evening.jpg" />
@@ -59,7 +63,9 @@
     <Content Include="Map\map_night.png" />
     <Content Include="Map\Night.jpg" />
     <Content Include="Map\sunrize.jpg" />
+    <Content Include="newlyweds_photo\Anna.jpg" />
     <Content Include="newlyweds_photo\background.jpg" />
+    <Content Include="newlyweds_photo\Boris.jpg" />
     <Content Include="newlyweds_photo\main_art.jpg" />
     <Content Include="newlyweds_photo\photo_orig.jpg" />
     <Content Include="newlyweds_photo\photo_art.jpg" />

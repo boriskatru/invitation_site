@@ -164,7 +164,7 @@
             <div class="divider"></div>
             <div class="poi-directory" aria-labelledby="poiDirectoryTitle">
               <div class="poi-directory__head">
-                <h3 class="poi-directory__title" id="poiDirectoryTitle">Все места на карте</h3>
+                <h3 class="poi-directory__title" id="poiDirectoryTitle">  Все места на карте</h3>
               </div>
               <div class="poi-directory__list" id="poiDirectoryList"></div>
             </div>
@@ -184,10 +184,14 @@
               </div>
           </div>
           <div>
-            <div class="gallery gallery--2col" aria-label="Фото молодожёнов">
-              <figure class="wide wide--2">
-                <img src="newlyweds_photo/photo_orig.jpg" alt="Борис и Анна" loading="lazy" width="1600" height="1067" />
-                <figcaption>Борис и Анна</figcaption>
+            <div class="gallery gallery--2col gallery--about-couple" aria-label="Фото молодожёнов">
+              <figure>
+                <img src="newlyweds_photo/Boris.jpg" alt="Борис" loading="lazy" width="900" height="1200" />
+                <figcaption>Борис</figcaption>
+              </figure>
+              <figure>
+                <img src="newlyweds_photo/Anna.jpg" alt="Анна" loading="lazy" width="900" height="1200" />
+                <figcaption>Анна</figcaption>
               </figure>
             </div>
           </div>
@@ -233,8 +237,9 @@
             </div>
           </div>
         </div>
-        <div class="where-map" style="margin-top: 14px;">
-          <iframe class="map" title="Карта: Яхт-клуб SkyRiver" src="https://yandex.ru/map-widget/v1/?text=%D0%AF%D1%85%D1%82-%D0%BA%D0%BB%D1%83%D0%B1%20SkyRiver%2C%20%D1%83%D0%BB.%20%D0%97%D0%B5%D0%BC%D0%BB%D1%8F%D0%BD%D0%B8%D1%87%D0%BD%D0%B0%D1%8F%2C%20%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BD%D0%B8%D0%B5%205%2F3%2C%20%D0%A2%D1%80%D0%BE%D0%B8%D1%86%D0%BA%D0%BE%D0%B5%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB.%2C%20141044&z=14" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="where-map" style="margin-top: 14px;" id="venueMapContainer">
+          <button class="map-fullscreen-toggle" type="button" id="venueMapFullscreenToggle" aria-label="Развернуть карту на весь экран" aria-pressed="false">⤢ <span>На весь экран</span></button>
+          <iframe class="map" title="Карта: Яхт-клуб SkyRiver" src="https://yandex.ru/map-widget/v1/?text=%D0%AF%D1%85%D1%82-%D0%BA%D0%BB%D1%83%D0%B1%20SkyRiver%2C%20%D1%83%D0%BB.%20%D0%97%D0%B5%D0%BC%D0%BB%D1%8F%D0%BD%D0%B8%D1%87%D0%BD%D0%B0%D1%8F%2C%20%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BD%D0%B8%D0%B5%205%2F3%2C%20%D0%A2%D1%80%D0%BE%D0%B8%D1%86%D0%BA%D0%BE%D0%B5%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB.%2C%20141044&z=14" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
         </div>
       </section>
 
