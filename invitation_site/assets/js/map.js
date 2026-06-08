@@ -516,9 +516,14 @@
 	  if (!badgeEl) return;
 	  const mskHour = getMskHour();
 	  const key = getTimeOfDayKey(mskHour);
-	  const jpg = `Map/${key}.jpg`;
-	  const png = `Map/${key}.png`;
-	  setImgWithFallback(badgeEl, jpg, png);
+	  const badgeSourcesByKey = {
+		day: { primary: 'Map/day.jpg', fallback: null },
+		sunrize: { primary: 'Map/sunrize.jpg', fallback: null },
+		evening: { primary: 'Map/evening.jpg', fallback: null },
+		night: { primary: 'Map/Night.jpg', fallback: 'Map/map_night.png' },
+	  };
+	  const badgeSources = badgeSourcesByKey[key] || { primary: `Map/${key}.jpg`, fallback: `Map/${key}.png` };
+	  setImgWithFallback(badgeEl, badgeSources.primary, badgeSources.fallback);
 	  if (clockEl) clockEl.textContent = getMskTimeHHMM();
 	}
 
