@@ -265,6 +265,7 @@
 	const frameEl = document.getElementById(cfg.frameImgId);
 	const badgeEl = document.getElementById(cfg.badgeImgId);
 	const clockEl = document.getElementById('timeOfDayClock');
+	const poiDirectoryListEl = document.getElementById('poiDirectoryList');
 
 	if (!viewport || !canvas) return;
 
@@ -404,6 +405,32 @@
 	const padXRatio = typeof contentPadding.x === 'number' ? contentPadding.x : 0;
 	const padYRatio = typeof contentPadding.y === 'number' ? contentPadding.y : 0;
 
+	function renderPoiDirectory(items) {
+	  if (!poiDirectoryListEl) return;
+	  poiDirectoryListEl.innerHTML = '';
+
+	  for (const poi of items) {
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'poi-directory__item';
+		button.setAttribute('aria-label', `Открыть описание места ${poi?.title || ''}`);
+
+		const title = document.createElement('span');
+		title.className = 'poi-directory__item-title';
+		title.textContent = poi?.title || 'Без названия';
+
+		const short = document.createElement('span');
+		short.className = 'poi-directory__item-short';
+		short.textContent = poi?.short || poi?.description || '';
+
+		button.append(title, short);
+		button.addEventListener('click', () => modal.open(poi));
+		poiDirectoryListEl.appendChild(button);
+	  }
+	}
+
+	renderPoiDirectory(pois);
+
 	function getMskTimeHHMM() {
 	  try {
 		return new Intl.DateTimeFormat('ru-RU', {
@@ -442,19 +469,44 @@
 
 		const x = x0 + clamp(poi?.x ?? 0, 0, 1) * w;
 		const y = y0 + clamp(poi?.y ?? 0, 0, 1) * h;
+		const headRadius = r * 1.15;
+		const innerRadius = headRadius * 0.48;
+		const tailHeight = headRadius * 1.95;
+		const baseY = y + headRadius * 0.38;
+		const tipY = baseY + tailHeight;
 
 		ctx.save();
+		const glow = ctx.createRadialGradient(x, y, headRadius * 0.2, x, y + headRadius * 0.2, headRadius * 2.4);
+		glow.addColorStop(0, 'rgba(255, 226, 160, 0.42)');
+		glow.addColorStop(0.55, 'rgba(200, 164, 93, 0.20)');
+		glow.addColorStop(1, 'rgba(200, 164, 93, 0)');
+		ctx.fillStyle = glow;
 		ctx.beginPath();
-		ctx.arc(x, y, r, 0, Math.PI * 2);
+		ctx.arc(x, y + headRadius * 0.24, headRadius * 2.1, 0, Math.PI * 2);
+		ctx.closePath();
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.arc(x, y, headRadius, Math.PI, 0, false);
+		ctx.quadraticCurveTo(x + headRadius * 0.98, baseY + headRadius * 0.34, x, tipY);
+		ctx.quadraticCurveTo(x - headRadius * 0.98, baseY + headRadius * 0.34, x - headRadius, baseY);
 		ctx.closePath();
 		const grad = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, 1, x, y, r);
-		grad.addColorStop(0, 'rgba(255,255,255,0.90)');
-		grad.addColorStop(0.55, 'rgba(200,164,93,0.85)');
-		grad.addColorStop(1, 'rgba(154,106,58,0.95)');
+		grad.addColorStop(0, 'rgba(255, 244, 220, 0.88)');
+		grad.addColorStop(0.38, 'rgba(236, 196, 110, 0.86)');
+		grad.addColorStop(1, 'rgba(120, 41, 28, 0.88)');
 		ctx.fillStyle = grad;
 		ctx.fill();
-		ctx.strokeStyle = 'rgba(73, 45, 24, 0.35)';
-		ctx.lineWidth = Math.max(1, r * 0.12);
+		ctx.strokeStyle = 'rgba(53, 20, 12, 0.55)';
+		ctx.lineWidth = Math.max(1.5, r * 0.16);
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.arc(x, y, innerRadius, 0, Math.PI * 2);
+		ctx.fillStyle = 'rgba(255, 248, 236, 0.86)';
+		ctx.fill();
+		ctx.strokeStyle = 'rgba(120, 41, 28, 0.28)';
+		ctx.lineWidth = Math.max(1, r * 0.08);
 		ctx.stroke();
 		ctx.restore();
 	  }

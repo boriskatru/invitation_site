@@ -23,7 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="assets\audio\goida.mp3" />
-    <Content Include="assets\audio\zvuk-poceluya.mp3" />
+    <Content Include="assets\audio\kiss.mp4" />
     <Content Include="assets\back.jpg" />
     <Content Include="assets\css\styles.css" />
     <Content Include="assets\data\mapContent.json" />
@@ -39,6 +39,7 @@
     <Content Include="assets\dresscod\man\787778159863463065.jpg" />
     <Content Include="assets\dresscod\man\Old Money Outfit for Men 🤎🔥 _ Classic Vintage Style.jpg" />
     <Content Include="assets\dresscod\man\А ля рус дресс код.jpg" />
+    <Content Include="assets\js\config.js" />
     <Content Include="assets\js\main.js" />
     <Content Include="assets\js\map.js" />
     <Content Include="assets\Logo.png" />

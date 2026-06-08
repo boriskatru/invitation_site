@@ -50,12 +50,68 @@ setInterval(updateTimer, 1000);
 const rsvpForm = document.getElementById('rsvpForm');
 const rsvpToast = document.getElementById('rsvpToast');
 const rsvpCodeWord = document.getElementById('rsvpCodeWord');
+const guestbookSubmitUrl = window.siteConfig?.guestbookSubmitUrl?.trim() || '';
 
 function showToast(message, isError = false) {
   if (!rsvpToast) return;
   rsvpToast.textContent = message;
   rsvpToast.classList.toggle('error', isError);
   rsvpToast.style.display = 'block';
+}
+
+function setRsvpSubmitting(isSubmitting) {
+  if (!rsvpForm) return;
+  const submitButton = rsvpForm.querySelector('button[type="submit"]');
+  if (!submitButton) return;
+
+  submitButton.disabled = isSubmitting;
+  submitButton.setAttribute('aria-busy', isSubmitting ? 'true' : 'false');
+}
+
+async function submitGuestScroll(payload) {
+  if (!guestbookSubmitUrl) {
+	throw new Error('Не настроен адрес отправки гостевого свитка.');
+  }
+
+	for (const row of payload) {
+	const body = new URLSearchParams();
+
+	Object.entries(row).forEach(([key, value]) => {
+	  body.append(key, value ?? '');
+	});
+
+	const response = await fetch(guestbookSubmitUrl, {
+	  method: 'POST',
+	  mode: 'no-cors',
+	  body
+	});
+	  }
+}
+
+function buildGuestRows(formData) {
+  const submittedAt = new Date().toISOString();
+  const companions = formData
+	.getAll('companions')
+	.map((value) => value.trim())
+	.filter(Boolean);
+
+  const primaryGuest = {
+	name: (formData.get('name') || '').toString().trim(),
+	contact: (formData.get('contact') || '').toString().trim(),
+	attendance: (formData.get('attendance') || '').toString().trim(),
+	allergies: (formData.get('allergies') || '').toString().trim(),
+	comment: (formData.get('comment') || '').toString().trim(),
+	submittedAt,
+	guestType: 'primary'
+  };
+
+  const companionGuests = companions.map((name) => ({
+	name,
+	guestType: 'companion',
+	submittedAt
+  }));
+
+  return [primaryGuest, ...companionGuests];
 }
 
 function createCompanionField(value = '') {
@@ -82,7 +138,7 @@ function createCompanionField(value = '') {
 
 addCompanionBtn?.addEventListener('click', () => createCompanionField());
 
-rsvpForm?.addEventListener('submit', (e) => {
+rsvpForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const name = (rsvpForm.querySelector('[name="name"]')?.value || '').trim();
@@ -99,20 +155,25 @@ rsvpForm?.addEventListener('submit', (e) => {
   }
 
   const fd = new FormData(rsvpForm);
-  const payload = Object.fromEntries(fd.entries());
-	payload.companions = fd
-	.getAll('companions')
-	.map((value) => value.trim())
-	.filter(Boolean);
-  payload.guestCount = payload.companions.length + 1;
-  payload.submittedAt = new Date().toISOString();
-  const list = JSON.parse(localStorage.getItem('rsvpResponses') || '[]');
-  list.push(payload);
-  localStorage.setItem('rsvpResponses', JSON.stringify(list));
-  rsvpForm.reset();
+	const payload = buildGuestRows(fd);
+
+  setRsvpSubmitting(true);
+
+  try {
+	await submitGuestScroll(payload);
+
+	const list = JSON.parse(localStorage.getItem('rsvpResponses') || '[]');
+	list.push(payload);
+	localStorage.setItem('rsvpResponses', JSON.stringify(list));
+	rsvpForm.reset();
 	companionsList && (companionsList.innerHTML = '');
 	if (rsvpCodeWord) rsvpCodeWord.style.display = 'block';
-  showToast('Спасибо! Ответ сохранён. До встречи на свадьбе.');
+	showToast('Спасибо! Свиток отправлен. Если адрес настроен верно, запись появится в таблице.');
+  } catch (error) {
+	showToast(error instanceof Error ? error.message : 'Не удалось отправить свиток.', true);
+  } finally {
+	setRsvpSubmitting(false);
+  }
 });
 
 const exportBtn = document.getElementById('rsvpExport');
@@ -530,18 +591,22 @@ function initFxButtons() {
 
 	root.appendChild(makeConfetti());
 
-	const kiss = document.createElement('div');
-	kiss.className = 'fx-kiss';
-	kiss.innerHTML = '<span aria-hidden="true">💋</span><span class="heart" aria-hidden="true">❤</span><span aria-hidden="true">💋</span>';
-	root.appendChild(kiss);
+	const kissVideo = document.createElement('video');
+	kissVideo.className = 'fx-kiss';
+	kissVideo.src = 'assets/audio/kiss.mp4';
+	kissVideo.autoplay = true;
+	kissVideo.muted = false;
+	kissVideo.playsInline = true;
+	kissVideo.controls = false;
+	kissVideo.preload = 'auto';
+	root.appendChild(kissVideo);
 
 	open({
 	  fxTitle: 'Горько!',
-	  fxText: 'Пора целоваться — конфетти прилагается.',
+	  fxText: 'Я тебя поцелую, потом... если захочешь',
 	  stageEl: root,
 	  invoker: btnGorko,
-		soundSrc: 'assets/audio/zvuk-poceluya.mp3',
-	  autoCloseMs: 3800,
+	  autoCloseMs: 9800,
 	});
   }
 
