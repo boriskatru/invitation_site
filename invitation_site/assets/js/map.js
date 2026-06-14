@@ -331,6 +331,7 @@
 	const badgeEl = document.getElementById(cfg.badgeImgId);
 	const clockEl = document.getElementById('timeOfDayClock');
 	const poiDirectoryListEl = document.getElementById('poiDirectoryList');
+	const questBoardListEl = document.getElementById('questBoardList');
 
 	if (!viewport || !canvas) return;
 
@@ -395,6 +396,7 @@
 	if (!ctx) return;
 
 	const areasFog = Array.isArray(data?.areas) ? data.areas : [];
+	const questStages = Array.isArray(data?.quests) ? data.quests : [];
 	const pois = Array.isArray(data?.pois) ? data.pois : [];
 	const lightSources = Array.isArray(data?.lightSources) ? data.lightSources : [];
 	const bonfires = lightSources.filter((ls) => ls.type === 'bonfire');
@@ -422,24 +424,38 @@
 	  return inside;
 	}
 
+	function getActiveFogArea(nowMs) {
+	  let activeArea = null;
+	  let activeRevealMs = Number.POSITIVE_INFINITY;
+
+	  for (const area of areasFog) {
+		const revealMs = parseRevealMs(area?.revealAt);
+		if (nowMs >= revealMs) continue;
+		if (revealMs < activeRevealMs) {
+		  activeArea = area;
+		  activeRevealMs = revealMs;
+		}
+	  }
+
+	  return activeArea;
+	}
+
 	function isPoiFogged(poi, nowMs) {
 	  const nx = clamp(poi?.x ?? 0, 0, 1);
 	  const ny = clamp(poi?.y ?? 0, 0, 1);
-	  for (const area of areasFog) {
-		if (!isRevealed(area, nowMs)) continue;
-		const mask = area?.mask;
-		if (!mask) continue;
-		if (mask.type === 'circle') {
-		  const cx = mask.x || 0;
-		  const cy = mask.y || 0;
-		  const r = mask.r || 0;
-		  const dx = nx - cx;
-		  const dy = ny - cy;
-		  if (dx * dx + dy * dy <= r * r) return true;
-		}
-		if (mask.type === 'poly' && Array.isArray(mask.points) && mask.points.length >= 3) {
-		  if (pointInPoly(nx, ny, mask.points)) return true;
-		}
+	  const area = getActiveFogArea(nowMs);
+	  const mask = area?.mask;
+	  if (!mask) return false;
+	  if (mask.type === 'circle') {
+		const cx = mask.x || 0;
+		const cy = mask.y || 0;
+		const r = mask.r || 0;
+		const dx = nx - cx;
+		const dy = ny - cy;
+		if (dx * dx + dy * dy <= r * r) return true;
+	  }
+	  if (mask.type === 'poly' && Array.isArray(mask.points) && mask.points.length >= 3) {
+		if (pointInPoly(nx, ny, mask.points)) return true;
 	  }
 	  return false;
 	}
@@ -494,10 +510,44 @@
 	  }
 	}
 
+	function getCurrentQuestItems(nowMs) {
+	  let activeStage = null;
+	  for (const stage of questStages) {
+		if (!isRevealed(stage, nowMs)) continue;
+		if (!activeStage || parseRevealMs(stage?.revealAt) > parseRevealMs(activeStage?.revealAt)) {
+		  activeStage = stage;
+		}
+	  }
+	  const items = Array.isArray(activeStage?.items) ? activeStage.items : [];
+	  return items.slice(0, 4);
+	}
+
+	function renderQuestBoard(items) {
+	  if (!questBoardListEl) return;
+	  questBoardListEl.innerHTML = '';
+
+	  for (const item of items) {
+		const article = document.createElement('article');
+		article.className = 'quest-board__item';
+
+		const title = document.createElement('h4');
+		title.className = 'quest-board__item-title';
+		title.textContent = item?.title || 'Без задания';
+
+		const description = document.createElement('p');
+		description.className = 'quest-board__item-description';
+		description.textContent = item?.description || '';
+
+		article.append(title, description);
+		questBoardListEl.appendChild(article);
+	  }
+	}
+
 	function getVisiblePois(nowMs) {
 	  return pois.filter((poi) => isRevealed(poi, nowMs) && !isPoiFogged(poi, nowMs));
 	}
 
+	renderQuestBoard(getCurrentQuestItems(Date.now()));
 	renderPoiDirectory(getVisiblePois(Date.now()));
 
 	function getMskTimeHHMM() {
@@ -797,49 +847,48 @@
 		ctx.closePath();
 	  }
 
-	  for (const area of areasFog) {
-		if (!isRevealed(area, nowMs)) continue;
-		if (area.mask?.type !== 'poly' || !Array.isArray(area.mask.points) || !area.mask.points.length) continue;
+	  const area = getActiveFogArea(nowMs);
+	  if (!area) return;
+	  if (area.mask?.type !== 'poly' || !Array.isArray(area.mask.points) || !area.mask.points.length) return;
 
-		const featherSteps = edgeFeather > 0 ? Math.max(30, Math.ceil(edgeFeather * 10)) : 0;
-		const centerX = (area.mask.points.reduce((sum, p) => sum + (p[0] || 0), 0) / area.mask.points.length) * w + x0;
-		const centerY = (area.mask.points.reduce((sum, p) => sum + (p[1] || 0), 0) / area.mask.points.length) * h + y0;
+	  const featherSteps = edgeFeather > 0 ? Math.max(30, Math.ceil(edgeFeather * 10)) : 0;
+	  const centerX = (area.mask.points.reduce((sum, p) => sum + (p[0] || 0), 0) / area.mask.points.length) * w + x0;
+	  const centerY = (area.mask.points.reduce((sum, p) => sum + (p[1] || 0), 0) / area.mask.points.length) * h + y0;
 
-		// Рисуем туман несколько раз с уменьшающейся альфой для эффекта размытия
-		for (let step = featherSteps + 1; step >= 0; step--) {
-		  ctx.save();
-		  ctx.globalCompositeOperation = 'source-over';
+	  // Рисуем туман несколько раз с уменьшающейся альфой для эффекта размытия
+	  for (let step = featherSteps + 1; step >= 0; step--) {
+		ctx.save();
+		ctx.globalCompositeOperation = 'source-over';
 
-		  // Рассчитываем масштаб усадки полигона для размытия
-		  const shrinkRatio = featherSteps > 0 ? step / (featherSteps + 1) : 1;
+		// Рассчитываем масштаб усадки полигона для размытия
+		const shrinkRatio = featherSteps > 0 ? step / (featherSteps + 1) : 1;
 
-		  // Создаём маску со скруглёнными углами
-		  drawRoundedPoly(ctx, area.mask.points, x0, y0, w, h, cornerRadius, centerX, centerY, shrinkRatio);
-		  ctx.clip();
+		// Создаём маску со скруглёнными углами
+		drawRoundedPoly(ctx, area.mask.points, x0, y0, w, h, cornerRadius, centerX, centerY, shrinkRatio);
+		ctx.clip();
 
-		  // Заполняем область текстурой.
-		  // Рисуем в screen-space без ctx.scale: задаём размер тайла напрямую в drawImage.
-		  if (fogImg) {
-			// Альфа линейно уменьшается от полной к полной прозрачности на границе
-			const stepAlpha = alpha * (step / Math.max(1, featherSteps + 1));
-			ctx.globalAlpha = stepAlpha;
+		// Заполняем область текстурой.
+		// Рисуем в screen-space без ctx.scale: задаём размер тайла напрямую в drawImage.
+		if (fogImg) {
+		  // Альфа линейно уменьшается от полной к полной прозрачности на границе
+		  const stepAlpha = alpha * (step / Math.max(1, featherSteps + 1));
+		  ctx.globalAlpha = stepAlpha;
 
-			// Размер тайла в пикселях (в space канвы)
-			const tileW = Math.max(1, Math.floor(w * tileSize));
-			const imgW = Math.max(1, fogImg.width);
-			const imgH = Math.max(1, fogImg.height);
-			// Сохраняем соотношение сторон текстуры
-			const tileH = Math.max(1, Math.floor(tileW * (imgH / imgW)));
+		  // Размер тайла в пикселях (в space канвы)
+		  const tileW = Math.max(1, Math.floor(w * tileSize));
+		  const imgW = Math.max(1, fogImg.width);
+		  const imgH = Math.max(1, fogImg.height);
+		  // Сохраняем соотношение сторон текстуры
+		  const tileH = Math.max(1, Math.floor(tileW * (imgH / imgW)));
 
-			for (let yy = -h * 2; yy < h * 3; yy += tileH) {
-			  for (let xx = -w * 2; xx < w * 3; xx += tileW) {
-				ctx.drawImage(fogImg, xx, yy, tileW, tileH);
-			  }
+		  for (let yy = -h * 2; yy < h * 3; yy += tileH) {
+			for (let xx = -w * 2; xx < w * 3; xx += tileW) {
+			  ctx.drawImage(fogImg, xx, yy, tileW, tileH);
 			}
 		  }
-
-		  ctx.restore();
 		}
+
+		ctx.restore();
 	  }
 	}
 
@@ -881,6 +930,7 @@
 
 	  // 4. Туман (скрытие локаций)
 	  renderFog(nowMs, padX, padY, innerW, innerH);
+	  renderQuestBoard(getCurrentQuestItems(nowMs));
 	  renderPoiDirectory(getVisiblePois(nowMs));
 	  
 	}

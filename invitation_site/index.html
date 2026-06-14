@@ -155,6 +155,13 @@
           <div class="panel">
             <div class="muted">Локации и задания будут открываться по мере развития сюжета вечера.</div>
             <div class="divider"></div>
+            <div class="quest-board" aria-labelledby="questBoardTitle">
+              <div class="quest-board__head">
+                <h3 class="quest-board__title" id="questBoardTitle">Текущие задания</h3>                
+              </div>
+              <div class="quest-board__list" id="questBoardList"></div>
+            </div>
+            <div class="divider"></div>
             <div class="territory-map" id="mapViewport" aria-label="Интерактивная карта территории">
               <canvas id="territoryCanvas"></canvas>
               <img id="timeOfDayBadge" alt="Время суток" aria-hidden="true" />
