@@ -494,7 +494,11 @@
 	  }
 	}
 
-	renderPoiDirectory(pois);
+	function getVisiblePois(nowMs) {
+	  return pois.filter((poi) => isRevealed(poi, nowMs) && !isPoiFogged(poi, nowMs));
+	}
+
+	renderPoiDirectory(getVisiblePois(Date.now()));
 
 	function getMskTimeHHMM() {
 	  try {
@@ -877,6 +881,7 @@
 
 	  // 4. Туман (скрытие локаций)
 	  renderFog(nowMs, padX, padY, innerW, innerH);
+	  renderPoiDirectory(getVisiblePois(nowMs));
 	  
 	}
 
