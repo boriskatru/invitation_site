@@ -264,7 +264,7 @@
 	const h = ((mskHour % 24) + 24) % 24;
 	if (h >= 5 && h < 10) return 'sunrize';
 	if (h >= 10 && h < 18) return 'day';
-	if (h >= 18 && h < 21) return 'evening';
+	if (h >= 18 && h < 20) return 'evening';
 	return 'night';
   }
 
