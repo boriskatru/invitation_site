@@ -126,6 +126,13 @@
 	return nowMs >= parseRevealMs(item?.revealAt);
   }
 
+	function isPoiVisible(poi, nowMs) {
+	  if (!isRevealed(poi, nowMs)) return false;
+	  const hideAt = poi?.hideAt;
+	  if (!hideAt) return true;
+	  return nowMs < parseRevealMs(hideAt);
+	}
+
   function setCanvasSize(canvas, viewport) {
 	const dpr = window.devicePixelRatio || 1;
 	const rect = viewport.getBoundingClientRect();
@@ -257,7 +264,7 @@
 	const h = ((mskHour % 24) + 24) % 24;
 	if (h >= 5 && h < 10) return 'sunrize';
 	if (h >= 10 && h < 18) return 'day';
-	if (h >= 18 && h < 22) return 'evening';
+	if (h >= 18 && h < 21) return 'evening';
 	return 'night';
   }
 
@@ -544,7 +551,7 @@
 	}
 
 	function getVisiblePois(nowMs) {
-	  return pois.filter((poi) => isRevealed(poi, nowMs) && !isPoiFogged(poi, nowMs));
+	  return pois.filter((poi) => isPoiVisible(poi, nowMs) && !isPoiFogged(poi, nowMs));
 	}
 
 	renderQuestBoard(getCurrentQuestItems(Date.now()));
@@ -588,7 +595,7 @@
 	  const r = Math.max(10, Math.min(w, h) * 0.012);
 
 	  for (const poi of pois) {
-		if (!isRevealed(poi, nowMs)) continue;
+		if (!isPoiVisible(poi, nowMs)) continue;
 		if (isPoiFogged(poi, nowMs)) continue;
 
 		const x = x0 + clamp(poi?.x ?? 0, 0, 1) * w;
@@ -949,7 +956,7 @@
 	  let bestD2 = Infinity;
 
 	  for (const poi of pois) {
-		if (!isRevealed(poi, nowMs)) continue;
+		if (!isPoiVisible(poi, nowMs)) continue;
 		if (isPoiFogged(poi, nowMs)) continue;
 
 		const x = x0 + clamp(poi?.x ?? 0, 0, 1) * w;
